@@ -120,6 +120,12 @@
               </excludes>
             </filter>
             <filter>
+              <artifact>io.grpc:grpc-core</artifact>
+              <excludes>
+                <exclude>META-INF/services/io.grpc.NameResolverProvider</exclude>
+              </excludes>
+            </filter>
+            <filter>
               <artifact>io.netty:netty-*</artifact>
               <excludes>
                 <exclude>META-INF/io.netty.versions.properties</exclude>
