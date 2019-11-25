@@ -746,6 +746,8 @@ public class AggregateDao implements AggregateRepository {
                     return "sum(total_duration_nanos) / sum(transaction_count) desc";
                 case THROUGHPUT:
                     return "sum(transaction_count) desc";
+                case CAPTURE_TIME:
+                    return "max(capture_time) desc";
                 default:
                     throw new AssertionError("Unexpected sort order: " + sortOrder);
             }

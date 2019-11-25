@@ -51,6 +51,14 @@ public class TransactionNameSummaryCollector {
                     return Longs.compare(right.transactionCount(), left.transactionCount());
                 }
             };
+            
+    private static final Ordering<TransactionNameSummary> orderingByCaptureTimeDesc = 
+            new Ordering<TransactionNameSummary>() {
+                @Override
+                public int compare(TransactionNameSummary left, TransactionNameSummary right) {
+                    return Longs.compare(right.captureTime(), left.captureTime());
+                }
+            };
 
     private final Map<String, MutableTransactionNameSummary> transactionNameSummaries =
             Maps.newHashMap();
@@ -66,6 +74,7 @@ public class TransactionNameSummaryCollector {
         }
         mts.totalDurationNanos += totalDurationNanos;
         mts.transactionCount += transactionCount;
+        mts.captureTime = Math.max(mts.captureTime, captureTime);
         lastCaptureTime = Math.max(lastCaptureTime, captureTime);
     }
 
@@ -81,6 +90,7 @@ public class TransactionNameSummaryCollector {
                     .transactionName(entry.getKey())
                     .totalDurationNanos(entry.getValue().totalDurationNanos)
                     .transactionCount(entry.getValue().transactionCount)
+                    .captureTime(entry.getValue().captureTime)
                     .build());
         }
         summaries = sortTransactionNameSummaries(summaries, sortOrder);
@@ -100,13 +110,15 @@ public class TransactionNameSummaryCollector {
                 return orderingByAverageTimeDesc.immutableSortedCopy(transactionNameSummaries);
             case THROUGHPUT:
                 return orderingByTransactionCountDesc.immutableSortedCopy(transactionNameSummaries);
+            case CAPTURE_TIME:
+                return orderingByCaptureTimeDesc.immutableSortedCopy(transactionNameSummaries);
             default:
                 throw new AssertionError("Unexpected sort order: " + sortOrder);
         }
     }
 
     public enum SummarySortOrder {
-        TOTAL_TIME, AVERAGE_TIME, THROUGHPUT
+        TOTAL_TIME, AVERAGE_TIME, THROUGHPUT, CAPTURE_TIME
     }
 
     @Value.Immutable
@@ -115,10 +127,12 @@ public class TransactionNameSummaryCollector {
         // aggregates use double instead of long to avoid (unlikely) 292 year nanosecond rollover
         double totalDurationNanos();
         long transactionCount();
+        long captureTime();
     }
 
     private static class MutableTransactionNameSummary {
         private double totalDurationNanos;
         private long transactionCount;
+        private long captureTime;
     }
 }
