@@ -178,6 +178,7 @@ glowroot.config([
         summarySortOrders: function () {
           return {
             'total-time': 'By percent of total time',
+            'capture-time': 'By latest capture time',
             'average-time': 'By average time',
             'throughput': 'By throughput (per min)'
           };
@@ -191,6 +192,8 @@ glowroot.config([
               } else if (sortOrder === 'average-time') {
                 return $filter('gtMillis')(summary.totalDurationNanos / (1000000 * summary.transactionCount))
                     + ' ms';
+              } else if (sortOrder === 'capture-time') {
+                return new Date(summary.captureTime || new Date().getTime()).toLocaleDateString('en-US', {dateStyle: 'medium', timeStyle: 'medium', timeZone: 'Asia/Kolkata'});
               } else if (sortOrder === 'throughput') {
                 return (60 * 1000 * summary.transactionCount / durationMillis).toFixed(1) + '/min';
               } else {

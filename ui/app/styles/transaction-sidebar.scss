@@ -62,7 +62,7 @@ $trace-point-error: $gt-red;
 @include media-breakpoint-up(md) {
   .gt-transaction-sidebar {
     display: inline-block;
-    width: 220px;
+    width: 100%;
     vertical-align: top;
   }
 
@@ -76,7 +76,7 @@ $trace-point-error: $gt-red;
 
 @include media-breakpoint-up(lg) {
   .gt-transaction-sidebar {
-    width: 300px;
+    width: 100%;
   }
 
   .gt-transaction-main-column {
@@ -98,7 +98,7 @@ $trace-point-error: $gt-red;
 
 @media screen and (min-width: 1600px) {
   .gt-transaction-sidebar {
-    width: 400px;
+    width: 100%;
   }
 
   .gt-transaction-main-column {

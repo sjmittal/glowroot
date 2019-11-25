@@ -62,7 +62,6 @@
            ng-if="transactionSummaries.length"
            gt-display="{{'All ' + transactionType + ' Transactions'}}"
            gt-display-right="{{overallSummaryValue()}}"
-           gt-url="{{currentTabUrl()}}{{sidebarQueryString(null)}}"
            gt-active="!transactionName">
       </div>
       <div style="height: 3px;"
@@ -72,7 +71,6 @@
            ng-repeat="transactionSummary in transactionSummaries"
            gt-display="{{transactionSummary.transactionName}}"
            gt-display-right="{{transactionSummaryValue(transactionSummary)}}"
-           gt-url="{{currentTabUrl()}}{{sidebarQueryString(transactionSummary.transactionName)}}"
            gt-active="transactionName == transactionSummary.transactionName">
       </div>
       <button class="list-group-item"
