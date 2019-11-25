@@ -417,6 +417,21 @@ class TransactionJsonService {
         }
         return sb.toString();
     }
+    
+    @GET(path = "/backend/transaction/summaries/now", permission = "agent:transaction:overview")
+    String getSummaries(@BindAgentRollupId String agentRollupId,
+            @BindRequest TransactionSummaryNowRequest nowRequest, @BindAutoRefresh boolean autoRefresh) 
+            throws Exception {
+        long now = System.currentTimeMillis();
+        TransactionSummaryRequest summaryRequest = ImmutableTransactionSummaryRequest.builder()
+                .transactionType(nowRequest.transactionType())
+                .from(now - nowRequest.now())
+                .to(now)
+                .sortOrder(nowRequest.sortOrder())
+                .limit(nowRequest.limit())
+                .build();
+        return getSummaries(agentRollupId, summaryRequest, autoRefresh);
+    }
 
     @GET(path = "/backend/transaction/summaries", permission = "agent:transaction:overview")
     String getSummaries(@BindAgentRollupId String agentRollupId,
@@ -888,6 +903,14 @@ class TransactionJsonService {
         long from();
         long to();
         SummarySortOrder sortOrder();
+        int limit();
+    }
+    
+    @Value.Immutable
+    interface TransactionSummaryNowRequest {
+        String transactionType();
+        SummarySortOrder sortOrder();
+        long now();
         int limit();
     }
 
