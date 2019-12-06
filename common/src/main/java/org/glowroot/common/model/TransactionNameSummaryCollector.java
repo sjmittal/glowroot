@@ -52,11 +52,11 @@ public class TransactionNameSummaryCollector {
                 }
             };
             
-    private static final Ordering<TransactionNameSummary> orderingByCaptureTimeDesc = 
+    private static final Ordering<TransactionNameSummary> orderingByCaptureTimeAsc = 
             new Ordering<TransactionNameSummary>() {
                 @Override
                 public int compare(TransactionNameSummary left, TransactionNameSummary right) {
-                    return Longs.compare(right.captureTime(), left.captureTime());
+                    return Longs.compare(left.captureTime(), right.captureTime());
                 }
             };
 
@@ -111,7 +111,7 @@ public class TransactionNameSummaryCollector {
             case THROUGHPUT:
                 return orderingByTransactionCountDesc.immutableSortedCopy(transactionNameSummaries);
             case CAPTURE_TIME:
-                return orderingByCaptureTimeDesc.immutableSortedCopy(transactionNameSummaries);
+                return orderingByCaptureTimeAsc.immutableSortedCopy(transactionNameSummaries);
             default:
                 throw new AssertionError("Unexpected sort order: " + sortOrder);
         }

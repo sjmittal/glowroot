@@ -699,13 +699,13 @@ public class AggregateDao implements AggregateRepository {
             // it's important that all these columns are in a single index so h2 can return the
             // result set directly from the index without having to reference the table for each row
             StringBuilder sb = new StringBuilder();
-            sb.append("select transaction_name, sum(total_duration_nanos), sum(transaction_count),"
-                    + " max(capture_time) from aggregate_tn_rollup_");
+            sb.append("select transaction_name, total_duration_nanos, transaction_count,"
+                    + " capture_time from aggregate_tn_rollup_");
             sb.append(query.rollupLevel());
             sb.append(" where transaction_type = ? and capture_time > ? and capture_time <= ?"
-                    + " group by transaction_name order by ");
+                    + " order by ");
             sb.append(getSortClause(sortOrder));
-            sb.append(", transaction_name limit ?");
+            sb.append(" limit ?");
             return castUntainted(sb.toString());
         }
 
@@ -741,13 +741,13 @@ public class AggregateDao implements AggregateRepository {
         private static @Untainted String getSortClause(SummarySortOrder sortOrder) {
             switch (sortOrder) {
                 case TOTAL_TIME:
-                    return "sum(total_duration_nanos) desc";
+                    return "total_duration_nanos desc";
                 case AVERAGE_TIME:
-                    return "sum(total_duration_nanos) / sum(transaction_count) desc";
+                    return "total_duration_nanos / transaction_count desc";
                 case THROUGHPUT:
-                    return "sum(transaction_count) desc";
+                    return "transaction_count desc";
                 case CAPTURE_TIME:
-                    return "max(capture_time) desc";
+                    return "capture_time";
                 default:
                     throw new AssertionError("Unexpected sort order: " + sortOrder);
             }
